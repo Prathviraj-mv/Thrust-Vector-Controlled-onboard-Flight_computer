@@ -17,7 +17,7 @@ Ardunio Thrust vectoring and flight control module .
 Built on the back of ardunio UNO board
 
 <p>
-  <img width=30% src="IMAGES/IMG_20240802_182342.jpg" >
-  <img width=30% src="IMAGES/IMG_20240802_182348.jpg" >
+  <img width=20% src="IMAGES/IMG_20240802_182342.jpg" >
+  <img width=20% src="IMAGES/IMG_20240802_182348.jpg" >
 
 </p>
