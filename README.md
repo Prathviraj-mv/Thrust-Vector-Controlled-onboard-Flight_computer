@@ -1,7 +1,7 @@
 # Actively stabilised TVC-Flight_controller
 learn more about TVC 
 <p>
-<href="https://en.wikipedia.org/wiki/Thrust_vectoring">
+ https://en.wikipedia.org/wiki/Thrust_vectoring
 <p>
 Ardunio Thrust vectoring and flight control module . 
 
