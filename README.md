@@ -10,12 +10,12 @@ Ardunio Thrust vectoring and flight control module .
 
 # TVC MOUNT
 <p>
-  <img width=50%> src="IMAGES/IMG_20240802_182545.jpg" >
+  <img width=50% src="IMAGES/IMG_20240802_182545.jpg" >
 </p>
 # FLIGHT CONTROLLER
 
 Built on the back of ardunio UNO board
 
 <p>
-  <img width=50%> src="IMAGES/IMG_20240802_182342.jpg" >
+  <img width=50% src="IMAGES/IMG_20240802_182342.jpg" >
 </p>
