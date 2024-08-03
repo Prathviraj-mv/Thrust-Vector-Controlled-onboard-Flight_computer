@@ -11,7 +11,7 @@ Ardunio Thrust vectoring and flight control module .
 .ARDUNIO UNO
 .LED
 .BUZZER
-.SD CARD
+.SD CARD READER
 
 # TVC MOUNT
 <p>
