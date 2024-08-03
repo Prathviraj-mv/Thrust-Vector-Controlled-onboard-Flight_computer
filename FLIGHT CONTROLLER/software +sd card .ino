@@ -1,0 +1,215 @@
+#include <Wire.h>
+#include <MPU6050.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BMP085_U.h>
+#include <Servo.h>
+#include <SD.h>
+#include <SPI.h>
+#include <EEPROM.h>
+
+// Pin definitions
+#define LED 8
+#define BUZZER 2
+#define SD_CS 4  // Chip Select pin for SD card module
+
+// MPU6050 sensor
+MPU6050 sensor;
+
+// BMP180 sensor
+Adafruit_BMP085_Unified bmp = Adafruit_BMP085_Unified(10085);
+
+// Servo pins
+const int SERVO_PIN1 = 9;
+const int SERVO_PIN2 = 10;
+
+// Create servo objects
+Servo sg90;
+Servo sg90two;
+
+// MPU6050 range
+const int MPU6050_RANGE = 17000;
+
+// Servo angle range
+const int SERVO_MIN_ANGLE = 0;  // Increased movement range
+const int SERVO_MAX_ANGLE = 180; // Increased movement range
+
+// Variables for filtering
+const int FILTER_SIZE = 5;  // Reduce filter size for more responsiveness
+int axBuffer[FILTER_SIZE] = {0};
+int ayBuffer[FILTER_SIZE] = {0};
+int filterIndex = 0;
+
+// Variable to store the highest altitude
+float highestAltitude = -9999; // Initialize with a very low value
+
+// Define EEPROM address to store the highest altitude
+const int EEPROM_ADDRESS = 0;
+
+File dataFile;
+
+void setup() {
+  Serial.begin(9600);
+  Wire.begin();
+
+  // Initialize buzzer and LED
+  pinMode(LED, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+  
+  tone(BUZZER, 1000); // Set the voltage to high and make a noise at 1000 Hz
+  delay(100); // Wait for 50 milliseconds
+  noTone(BUZZER); // Set the voltage to low and make no noise
+
+  // Initialize MPU6050
+  sensor.initialize();
+  if (sensor.testConnection()) {
+    Serial.println("MPU6050 connected successfully");
+  } else {
+    Serial.println("MPU6050 connection failed");
+    while (1) {
+      delay(500);
+    }
+  }
+
+  // Initialize BMP180
+  if (!bmp.begin()) {
+    Serial.println("Could not find a valid BMP085 sensor, check wiring!");
+    while (1) {
+      delay(500);
+    }
+  }
+
+  // Initialize servos to 90 degrees (perpendicular position)
+  sg90.attach(SERVO_PIN1);
+  sg90two.attach(SERVO_PIN2);
+  sg90.write(90);
+  sg90two.write(90);
+
+  // Initialize EEPROM if necessary
+  float eepromAltitude;
+  EEPROM.get(EEPROM_ADDRESS, eepromAltitude);
+  if (isnan(eepromAltitude)) {
+    // Set default value if EEPROM is not properly initialized
+    eepromAltitude = -9999;
+    EEPROM.put(EEPROM_ADDRESS, eepromAltitude);
+  }
+  highestAltitude = eepromAltitude;
+  Serial.print("Highest Altitude retrieved from EEPROM: ");
+  Serial.println(highestAltitude);
+
+  // Initialize SD card
+  if (!SD.begin(SD_CS)) {
+    Serial.println("SD card initialization failed!");
+    while (1) {
+      delay(500);
+    }
+  }
+  Serial.println("SD card initialized.");
+
+  // Open the file for writing
+  dataFile = SD.open("datalog.txt", FILE_WRITE);
+  if (!dataFile) {
+    Serial.println("Error opening datalog.txt");
+  }
+}
+
+void loop() {
+  // Turn on LED
+  digitalWrite(LED, HIGH);
+
+  // Read BMP180 data
+  sensors_event_t event;
+  bmp.getEvent(&event);
+  if (event.pressure) {
+    float pressure = event.pressure;
+    Serial.print("Pressure: ");
+    Serial.print(pressure);
+    Serial.println(" hPa");
+
+    // Read temperature
+    float temperature;
+    bmp.getTemperature(&temperature);
+    Serial.print("Temperature: ");
+    Serial.print(temperature);
+    Serial.println(" C");
+
+    // Calculate altitude
+    float altitude = bmp.pressureToAltitude(1013.25, pressure);
+    Serial.print("Altitude: ");
+    Serial.print(altitude);
+    Serial.println(" m");
+
+    // Log data to SD card
+    if (dataFile) {
+      dataFile.print("Pressure: ");
+      dataFile.print(pressure);
+      dataFile.print(" hPa, Temperature: ");
+      dataFile.print(temperature);
+      dataFile.print(" C, Altitude: ");
+      dataFile.print(altitude);
+      dataFile.println(" m");
+      dataFile.flush(); // Ensure data is written to the file
+    }
+
+    // Update highest altitude if current altitude is greater
+    if (altitude > highestAltitude) {
+      highestAltitude = altitude;
+      EEPROM.put(EEPROM_ADDRESS, highestAltitude); // Save to EEPROM
+      Serial.print("New highest altitude recorded: ");
+      Serial.println(highestAltitude);
+    }
+  }
+
+  // Output the highest altitude every 10 seconds
+  static unsigned long lastPrintTime = 0;
+  unsigned long currentTime = millis();
+  if (currentTime - lastPrintTime >= 10000) { // Print every 10 seconds
+    Serial.print("Highest Altitude: ");
+    Serial.println(highestAltitude);
+    lastPrintTime = currentTime;
+  }
+
+  // Read MPU6050 data
+  int16_t ax, ay, az, gx, gy, gz;
+  sensor.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+
+  // Add new data to filter buffers
+  axBuffer[filterIndex] = ax;
+  ayBuffer[filterIndex] = ay;
+  filterIndex = (filterIndex + 1) % FILTER_SIZE;
+
+  // Compute filtered values
+  long axSum = 0;
+  long aySum = 0;
+  for (int i = 0; i < FILTER_SIZE; i++) {
+    axSum += axBuffer[i];
+    aySum += ayBuffer[i];
+  }
+  int axFiltered = axSum / FILTER_SIZE;
+  int ayFiltered = aySum / FILTER_SIZE;
+
+  Serial.print("ax: "); Serial.print(axFiltered); Serial.print(" ");
+  Serial.print("ay: "); Serial.print(ayFiltered); Serial.print(" ");
+  Serial.print("az: "); Serial.print(az); Serial.print(" ");
+  Serial.print("gx: "); Serial.print(gx); Serial.print(" ");
+  Serial.print("gy: "); Serial.print(gy); Serial.print(" ");
+  Serial.print("gz: "); Serial.println(gz);
+
+  // Map filtered MPU6050 data to servo angles with increased sensitivity
+  int servo_angle1 = map(axFiltered, -MPU6050_RANGE, MPU6050_RANGE, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+  int servo_angle2 = map(ayFiltered, -MPU6050_RANGE, MPU6050_RANGE, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+
+  // Constrain the angles to ensure they do not exceed the 0 to 180 degree limit
+  servo_angle1 = constrain(servo_angle1, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+  servo_angle2 = constrain(servo_angle2, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+
+  // Set servo positions
+  sg90.write(servo_angle1);
+  sg90two.write(servo_angle2);
+
+
+  // Turn off LED
+  digitalWrite(LED, LOW);
+
+  // Short delay before next loop iteration
+  delay(10);
+}
