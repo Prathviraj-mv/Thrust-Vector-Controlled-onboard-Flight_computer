@@ -1,5 +1,5 @@
 # Actively stabilised TVC-Flight_controller
-learn more about TVC 
+Learn more about TVC 
 <p>
  https://en.wikipedia.org/wiki/Thrust_vectoring
 <p>
