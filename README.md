@@ -7,11 +7,11 @@ Ardunio Thrust vectoring and flight control module .
 
 # Components 
 .MPU6050<br/>
-.BMP180
-.ARDUNIO UNO
-.LED
-.BUZZER
-.SD CARD READER
+.BMP180<br/>
+.ARDUNIO UNO<br/>
+.LED<br/>
+.BUZZER<br/>
+.SD CARD READER<br/>
 
 # TVC MOUNT
 <p>
