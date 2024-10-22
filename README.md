@@ -6,7 +6,7 @@ Learn more about TVC
 Ardunio Thrust vectoring and flight control module . 
 
 # Components 
-.MPU6050
+.MPU6050<br/>
 .BMP180
 .ARDUNIO UNO
 .LED
