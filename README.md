@@ -12,6 +12,9 @@ Ardunio Thrust vectoring and flight control module .
 .LED<br/>
 .BUZZER<br/>
 .SD CARD READER<br/>
+.9g servo<br/>
+.battery pack<br/>
+
 
 # TVC MOUNT
 <p>
