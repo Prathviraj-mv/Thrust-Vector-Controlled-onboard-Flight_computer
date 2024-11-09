@@ -28,6 +28,7 @@ Ardunio Thrust vectoring and flight control module .
 <p>
   <img width=50% src="IMAGES/IMG_20241023_184755.jpg" >
 </p>
+
 # SOFTWARE (DATA.LOG)
 <p>
   <img width=50% src="IMAGES/Screenshot 2024-10-07 212458.png" >
