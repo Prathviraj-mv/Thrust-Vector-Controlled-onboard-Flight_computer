@@ -1,9 +1,17 @@
 # Actively stabilised TVC-Flight_controller
+
+
+This project is a fully functional Thrust Vector Control (TVC) flight computer designed for model rocketry applications. The system uses real-time data from onboard sensors to stabilize and control the rocket's trajectory during flight by adjusting the angle of the thrust vector.
+
+Features
+Sensor Integration: Real-time data acquisition from IMU (e.g., MPU6050) for pitch, roll, and yaw measurements and barometric pressure sensors (e.g., BMP180) for altitude tracking.
+Control Mechanism: Servo-based thrust vectoring for precise control of the rocket's orientation.
+Data Logging: Logs flight data (altitude, angles, etc.) onboard for post-flight analysis.
+
 Learn more about TVC 
 <p>
  https://en.wikipedia.org/wiki/Thrust_vectoring
 <p>
-Ardunio Thrust vectoring and flight control module . 
 
 # Components 
 .MPU6050<br/>
