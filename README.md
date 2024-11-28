@@ -13,16 +13,6 @@ Learn more about TVC
  https://en.wikipedia.org/wiki/Thrust_vectoring
 <p>
 
-# Components 
-.MPU6050<br/>
-.BMP180<br/>
-.ARDUNIO UNO<br/>
-.LED<br/>
-.BUZZER<br/>
-.SD CARD READER<br/>
-.9g SERVO<br/>
-.BATTERY PACK<br/>
-
 
 # TVC MOUNT
 <p>
