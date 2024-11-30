@@ -27,6 +27,9 @@ Learn more about TVC
 <p>
   <img width=50% src="IMAGES/IMG_20241130_122523.jpg" >
 </p>
+<p>
+  <img width=50% src="IMAGES/IMG_20241130_122545.jpg" >
+</p>
 
 # SOFTWARE (DATA.LOG)
 <p>
