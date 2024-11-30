@@ -13,18 +13,19 @@ Learn more about TVC
  https://en.wikipedia.org/wiki/Thrust_vectoring
 <p>
 
+# FLIGHT CONTROLLER
+<p>
+  <img width=50% src="IMAGES/IMG_20241130_122446.jpg" >
+</p>
 
 # TVC MOUNT
 <p>
   <img width=50% src="IMAGES/IMG_20240802_182545.jpg" >
 </p>
 
-# FLIGHT CONTROLLER
+# COMBINED MODEL 
 <p>
-  <img width=50% src="IMAGES/IMG_20241020_131857.jpg" >
-</p>
-<p>
-  <img width=50% src="IMAGES/IMG_20241023_184755.jpg" >
+  <img width=50% src="IMAGES/IMG_20241130_122523.jpg" >
 </p>
 
 # SOFTWARE (DATA.LOG)
